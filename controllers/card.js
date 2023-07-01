@@ -67,7 +67,7 @@ const deleteCard = async (req, res) => {
 
 const addLikeCard = async (req, res) => {
     try {
-        Card.findByIdAndUpdate(eq.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+        Card.findByIdAndUpdate(req.params.cardId,  { likes: req.user._id } )
     } catch (error) {
         if (error.likes === "CastError") {
             res.status(400).send({
@@ -83,9 +83,9 @@ const addLikeCard = async (req, res) => {
 
 const deleteLikeCard = async (req, res) => {
     try {
-        Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+        Card.findByIdAndUpdate(req.params.cardId,  { likes: req.user._id } )gi
     } catch (error) {
-        if (error.avatar === "CastError") {
+        if (error.likes === "CastError") {
             res.status(400).send({
                 message: "Неверные данные"
             })
