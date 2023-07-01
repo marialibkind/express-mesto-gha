@@ -1,26 +1,24 @@
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-
-const cardsRouter = require('./routes/cards');
-const usersRouter = require('./routes/users');
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const router = require("./routes/index");
 
 const app = express();
 const { PORT = 3000 } = process.env;
 
-app.use(bodyParser.json());
-
 app.use(express.json());
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {});
+mongoose.connect("mongodb://localhost:27017/mestodb", {family: 4});
 
-app.use(auth);
-app.use('/cards', cardsRouter);
-app.use('/users', usersRouter);
+app.use((req, res, next) => {
+  req.user = {
+    _id: '649ffd1a88da602f5a65d7c0' 
+  };
 
-
-app.use((res, req, next) => {
+  next();
 });
+
+app.use(router)
 
 app.listen(PORT, () => {
   console.log(`Сервис запущен. Вы в безопасности. Порт: ${PORT}`);
