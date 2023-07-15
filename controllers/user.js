@@ -72,7 +72,7 @@ const setProfile = async (req, res) => {
     User.findByIdAndUpdate(
       id,
       { name, about },
-      { new: true },
+      { new: true, runValidators: true },
     );
     if (!name || !about) {
       res.status(404).send({
@@ -96,7 +96,7 @@ const setAvatar = async (req, res) => {
   try {
     const { avatar } = req.body;
     const id = req.user._id;
-    User.findByIdAndUpdate(id, { avatar }, { new: true });
+    User.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true });
   } catch (error) {
     if (error.avatar === "ValidationError") {
       res.status(400).send({

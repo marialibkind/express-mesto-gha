@@ -6,7 +6,7 @@ const {
 usersRouter.get("/users", getUsers);
 usersRouter.post("/users", createUser);
 usersRouter.get("/users/:userId", getUserId);
-usersRouter.put("/users", setProfile);
-usersRouter.delete("/users", setAvatar);
+usersRouter.patch("/users/me", setProfile);
+usersRouter.patch("/users/me/avatar", setAvatar);
 
 module.exports = usersRouter;
