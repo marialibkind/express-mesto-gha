@@ -68,16 +68,23 @@ const setProfile = async (req, res) => {
   try {
     const { name, about } = req.body;
     const id = req.user._id;
+    if (!name || !about) {
+      res.status(400).send({
+        message: "Неверные данные",
+      });
+    }
 
-    User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
       id,
       { name, about },
       { new: true, runValidators: true },
     );
-    if (!name || !about) {
+    if (!user) {
       res.status(404).send({
-        message: "Пользователь не найден",
+        message: "Пользователь не обновлён",
       });
+    } else {
+      res.send(user);
     }
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -96,7 +103,19 @@ const setAvatar = async (req, res) => {
   try {
     const { avatar } = req.body;
     const id = req.user._id;
-    User.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true });
+    if (!avatar) {
+      res.status(400).send({
+        message: "Неверные данные",
+      });
+    }
+    const user = await User.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true });
+    if (!user) {
+      res.status(404).send({
+        message: "Пользователь не обновлён",
+      });
+    } else {
+      res.send(user);
+    }
   } catch (error) {
     if (error.avatar === "ValidationError") {
       res.status(400).send({
