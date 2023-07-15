@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "lint": "npx eslint . --fix ",
+    "lint": "npx eslint . --fix",
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
@@ -13,7 +13,8 @@
   "devDependencies": {
     "eslint": "^8.44.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "eslint-plugin-import": "^2.27.5"
   },
   "dependencies": {
     "dotenv": "^16.3.1",
