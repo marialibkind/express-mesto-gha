@@ -74,7 +74,7 @@ const addLikeCard = async (req, res) => {
       res.send(card);
     }
   } catch (error) {
-    if (error.likes === "CastError") {
+    if (error.name === "CastError") {
       res.status(400).send({
         message: "Неверные данные",
       });
@@ -102,7 +102,7 @@ const deleteLikeCard = async (req, res) => {
       res.send(card);
     }
   } catch (error) {
-    if (error.likes === "CastError") {
+    if (error.name === "CastError") {
       res.status(400).send({
         message: "Неверные данные",
       });
