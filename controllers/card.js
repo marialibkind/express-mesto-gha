@@ -5,7 +5,7 @@ const getCards = async (req, res) => {
     const cards = await Card.find({});
     res.send(cards);
   } catch (error) {
-    res.status(500).send({
+    res.status(http2.HTTP_STATUS_INTERNAL_ERROR).send({
       message: "Ошибка на сервере",
     });
   }
@@ -15,21 +15,21 @@ const createCard = async (req, res) => {
   try {
     const { name, link } = req.body;
     if (!name || !link) {
-      res.status(400).send({
+      res.status(http2.HTTP_STATUS_BAD_REQUEST).send({
         message: "Неверные данные",
       });
       return;
     }
     const card = await Card.create({ name, link, owner: req.user._id });
-    res.status(201).send(card);
+    res.status(http2.HTTP_STATUS_CREATED).send(card);
   } catch (error) {
     if (error.name === "ValidationError") {
-      res.status(400).send({
+      res.status(http2.HTTP_STATUS_BAD_REQUEST).send({
         message: "Неверные данные",
       });
       return;
     }
-    res.status(500).send({
+    res.status(http2.HTTP_STATUS_INTERNAL_ERROR).send({
       message: "Ошибка на сервере",
     });
   }
@@ -39,7 +39,7 @@ const deleteCard = async (req, res) => {
   try {
     const card = await Card.findByIdAndDelete(req.params.cardId);
     if (!card) {
-      res.status(404).send({
+      res.status(http2.HTTP_STATUS_NOT_FOUND).send({
         message: "Карточка не найдена",
       });
       return;
@@ -47,12 +47,12 @@ const deleteCard = async (req, res) => {
     res.send(card);
   } catch (error) {
     if (error.name === "CastError") {
-      res.status(400).send({
+      res.status(http2.HTTP_STATUS_BAD_REQUEST).send({
         message: "Неверные данные",
       });
       return;
     }
-    res.status(500).send({
+    res.status(http2.HTTP_STATUS_INTERNAL_ERROR).send({
       message: "Ошибка на сервере",
     });
   }
@@ -67,7 +67,7 @@ const addLikeCard = async (req, res) => {
     );
 
     if (!card) {
-      res.status(404).send({
+      res.status(http2.HTTP_STATUS_NOT_FOUND).send({
         message: "лайк не поставлен",
       });
     } else {
@@ -75,12 +75,12 @@ const addLikeCard = async (req, res) => {
     }
   } catch (error) {
     if (error.name === "CastError") {
-      res.status(400).send({
+      res.status(http2.HTTP_STATUS_BAD_REQUEST).send({
         message: "Неверные данные",
       });
       return;
     }
-    res.status(500).send({
+    res.status(http2.HTTP_STATUS_INTERNAL_ERROR).send({
       message: "Ошибка на сервере",
     });
   }
@@ -95,7 +95,7 @@ const deleteLikeCard = async (req, res) => {
     );
 
     if (!card) {
-      res.status(404).send({
+      res.status(http2.HTTP_STATUS_NOT_FOUND).send({
         message: "лайк не удалён",
       });
     } else {
@@ -103,12 +103,12 @@ const deleteLikeCard = async (req, res) => {
     }
   } catch (error) {
     if (error.name === "CastError") {
-      res.status(400).send({
+      res.status(http2.HTTP_STATUS_BAD_REQUEST).send({
         message: "Неверные данные",
       });
       return;
     }
-    res.status(500).send({
+    res.status(http2.HTTP_STATUS_INTERNAL_ERROR).send({
       message: "Ошибка на сервере",
     });
   }

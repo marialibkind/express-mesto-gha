@@ -7,7 +7,7 @@ router.use(cardsRouter);
 router.use(usersRouter);
 
 router.use((req, res) => {
-  res.status(404).send({
+  res.status(http2.HTTP_STATUS_NOT_FOUND).send({
     message: "Такой страницы нет",
   });
 });
