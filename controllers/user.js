@@ -39,7 +39,7 @@ const createUser = async (req, res, next) => {
     const user = await User.create({
       name, about, avatar, email, password: hashpass,
     });
-    res.status(201).send(user);
+    res.status(201).send({name, about, avatar, email});
   } catch (error) {
     if (error.code === 11000) {
       const error409 = new CustomError(409, "Почта Уже используется");
