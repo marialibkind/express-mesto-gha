@@ -1,5 +1,5 @@
 const Card = require("../models/card");
-const CustomError = require("../errors/CustomError");
+const CustomError = require("../errors/customError");
 
 const getCards = async (req, res) => {
   try {

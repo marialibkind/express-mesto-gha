@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/users");
-const CustomError = require("../errors/CustomError");
+const CustomError = require("../errors/customError");
 
 const login = async (req, res, next) => {
   try {
