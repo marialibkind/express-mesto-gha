@@ -1,4 +1,5 @@
 const Card = require("../models/card");
+const CustomError = require("../errors/CustomError");
 
 const getCards = async (req, res) => {
   try {
@@ -35,26 +36,20 @@ const createCard = async (req, res) => {
   }
 };
 
-const deleteCard = async (req, res) => {
+const deleteCard = async (req, res, next) => {
   try {
-    const card = await Card.findByIdAndDelete(req.params.cardId);
+    const card = await Card.findById(req.params.cardId);
+    const userId = req.user._id;
     if (!card) {
-      res.status(http2.HTTP_STATUS_NOT_FOUND).send({
-        message: "Карточка не найдена",
-      });
-      return;
+      throw new CustomError(404, "Карточка не найдена");
     }
-    res.send(card);
+    if (card.owner.toString() !== userId) {
+      throw new CustomError(403, "У вас нет прав");
+    }
+    await card.deleteOne();
+    res.send({ message: "Удалено" });
   } catch (error) {
-    if (error.name === "CastError") {
-      res.status(http2.HTTP_STATUS_BAD_REQUEST).send({
-        message: "Неверные данные",
-      });
-      return;
-    }
-    res.status(http2.HTTP_STATUS_INTERNAL_ERROR).send({
-      message: "Ошибка на сервере",
-    });
+    next(error);
   }
 };
 

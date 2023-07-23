@@ -1,4 +1,25 @@
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const User = require("../models/users");
+const CustomError = require("../errors/CustomError");
+
+const login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email }).select("+password");
+    if (!user || !bcrypt.compareSync(password, user.password)) {
+      throw new CustomError(401, "неправильная почта или пароль");
+    }
+    const token = jwt.sign({ _id: user._id }, "******", { expiresIn: "7d" });
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    res.send({ message: "Успешно" });
+  } catch (error) {
+    next(error);
+  }
+};
 
 const getUsers = async (req, res) => {
   try {
@@ -13,7 +34,13 @@ const getUsers = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const user = await User.create({ name, about, avatar });
+    const {
+      name, about, avatar, email, password,
+    } = req.body;
+    const hashpass = await bcrypt.hash(password, 10);
+    const user = await User.create({
+      name, about, avatar, email, password: hashpass,
+    });
     res.status(http2.HTTP_STATUS_CREATED).send(user);
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -105,6 +132,18 @@ const setAvatar = async (req, res) => {
   }
 };
 
+const getInforCurrentUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      throw new CustomError(404, "Пользователь не найден");
+    }
+    res.send(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
-  getUsers, createUser, getUserId, setProfile, setAvatar,
+  getUsers, createUser, getUserId, setProfile, setAvatar, getInforCurrentUser, login,
 };
