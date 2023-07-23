@@ -36,10 +36,12 @@ const createUser = async (req, res, next) => {
       name, about, avatar, email, password,
     } = req.body;
     const hashpass = await bcrypt.hash(password, 10);
-    const user = await User.create({
+    await User.create({
       name, about, avatar, email, password: hashpass,
     });
-    res.status(201).send({name, about, avatar, email});
+    res.status(201).send({
+      name, about, avatar, email,
+    });
   } catch (error) {
     if (error.code === 11000) {
       const error409 = new CustomError(409, "Почта Уже используется");
