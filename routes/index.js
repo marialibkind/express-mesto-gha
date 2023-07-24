@@ -3,13 +3,13 @@ const router = require("express").Router();
 const cardsRouter = require("./cards");
 const usersRouter = require("./users");
 
+const CustomError = require("../errors/customError");
+
 router.use(cardsRouter);
 router.use(usersRouter);
 
-router.use((req, res) => {
-  res.status(404).send({
-    message: "Такой страницы нет",
-  });
+router.use((req, res, next) => {
+  next(new CustomError("Запрашиваемый ресурс не найден"));
 });
 
 module.exports = router;
